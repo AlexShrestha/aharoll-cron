@@ -1,0 +1,21 @@
+name: guardrail-tick
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: guardrail-tick
+  cancel-in-progress: false
+
+jobs:
+  tick:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Call guardrail tick
+        env:
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          curl --fail-with-body --silent --show-error --max-time 100 \
+            -H "Authorization: Bearer ${CRON_SECRET}" \
+            https://auditor.aharoll.com/api/guardrail/tick
